@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     volumebutton.cpp \
     playlist.cpp \
     optionbar.cpp \
-    audioengine.cpp
+    audioengine.cpp \
+    audioplayer.cpp
 
 HEADERS  += \
     customwindow.h \
@@ -30,13 +31,16 @@ HEADERS  += \
     volumebutton.h \
     playlist.h \
     optionbar.h \
-    audioengine.h
+    audioengine.h \
+    audioplayer.h
 
 
 LIBS += "C:/MinGW/msys/1.0/home/anobis/taglib-1.9.1/taglib/libtag.dll.a"
 LIBS += "C:/MinGW/msys/1.0/home/anobis/mpg123-1.20.0/src/libmpg123/.libs/libmpg123.dll.a"
 LIBS += "C:/MinGW/msys/1.0/home/anobis/libao-1.1.0/src/.libs/libao.dll.a"
+LIBS += "C:/MinGW/msys/1.0/home/anobis/portaudio/lib/.libs/libportaudio.dll.a"
 
 INCLUDEPATH += c:/MinGw/msys/1.0/home/anobis/taglib-1.9.1 c:/MinGw/msys/1.0/home/anobis/taglib-1.9.1/taglib
 INCLUDEPATH += c:/MinGW/msys/1.0/home/anobis/mpg123-1.20.0/src c:/MinGW/msys/1.0/home/anobis/mpg123-1.20.0/src/libmpg123
 INCLUDEPATH += c:/MinGw/msys/1.0/home/anobis/libao-1.1.0/include
+INCLUDEPATH += c:/MinGw/msys/1.0/home/anobis/portaudio

@@ -8,6 +8,7 @@
 #include "windowtitlebar.h"
 #include "musicplayer.h"
 #include "playlist.h"
+#include "audioplayer.h"
 
 class CustomWindow : public QWidget
 {
@@ -31,6 +32,7 @@ private:
         MusicPlayer m_MusicPlayer;
         QTabWidget m_TabWindow;
         QSizeGrip m_SizeGrip;
+        AudioPlayer m_AudioPlayer;
 
 signals:
         void windowTitleChanged();

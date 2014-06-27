@@ -1,41 +1,32 @@
 #include "audioengine.h"
+#include <QWidget>
 #include <QDebug>
 #include <QVBoxLayout>
 
 #define BITS 8
 
 AudioEngine::AudioEngine(QObject *parent) :
-    m_pullTimer(new QTimer(this))
+    PLAYING(0),
+    PAUSED(1),
+    STOPPED(2),
+    m_pullTimer(new QTimer(0))
 {
     Q_UNUSED(parent);
     initDecoder("C:/Users/Public/Music/Sample Music/Kalimba.mp3");
-    initWindow();
 }
 
 AudioEngine::~AudioEngine()
 {
 }
 
-void AudioEngine::initWindow()
+int AudioEngine::currentState()
 {
-    QScopedPointer<QWidget> window(new QWidget);
-    QScopedPointer<QVBoxLayout> layout(new QVBoxLayout);
-
-    m_suspendResumeButton = new QPushButton(this);
-    m_suspendResumeButton->setText(tr("Pause"));
-    connect(m_suspendResumeButton, SIGNAL(clicked()), SLOT(toggleSuspendResume()));
-    layout->addWidget(m_suspendResumeButton);
-
-    window->setLayout(layout.data());
-    layout.take(); // ownership transferred
-
-    setCentralWidget(window.data());
-    QWidget *const windowPtr = window.take(); // ownership transferred
-    windowPtr->show();
+    return engineState;
 }
 
 void AudioEngine::initDecoder(QString filename)
 {
+
     int channels, encoding;
     long rate;
 
@@ -46,22 +37,10 @@ void AudioEngine::initDecoder(QString filename)
     buffer = (unsigned char *) malloc(sizeof(unsigned char) * buffer_size);
     mpg123_open(mh, filename.toStdString().c_str());
     mpg123_getformat(mh, &rate, &channels, &encoding);
+    mpg123_volume_change(mh, 0);
     initOutput(channels, encoding, rate);
 }
 
-void AudioEngine::toggleSuspendResume()
-{
-    if(pull_state == true)
-    {
-        pull_state = false;
-        m_pullTimer->stop();
-    }
-    else
-    {
-        pull_state = true;
-        m_pullTimer->start(reset);
-    }
-}
 
 void AudioEngine::initOutput(int channels, int encoding, long rate)
 {
@@ -82,7 +61,18 @@ void AudioEngine::initOutput(int channels, int encoding, long rate)
     qDebug() << buffer_size;
 
     reset = (((float)buffer_size*8)/time*1000)-5;
+    engineState = PAUSED;
+}
+
+void AudioEngine::play()
+{
     m_pullTimer->start(reset);
+    engineState = PLAYING;
+}
+
+void AudioEngine::pause(){
+    m_pullTimer->stop();
+    engineState = PAUSED;
 }
 
 void AudioEngine::pullTimerExpired()
@@ -90,10 +80,11 @@ void AudioEngine::pullTimerExpired()
     err = mpg123_read(mh, buffer, buffer_size, &done);
     if(err == MPG123_OK)
     {
-        ao_play(dev, (char *)buffer, buffer_size);
+        ao_play(dev, (char *)buffer, buffer_size);        
     }
     else
     {
+        engineState = STOPPED;
         m_pullTimer->stop();
         free(buffer);
         ao_close(dev);

@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
     p.setColor(QPalette::Highlight, QColor(39,146,217,120));
     p.setColor(QPalette::HighlightedText, QColor(0,0,0));
     qApp->setPalette(p);
-    AudioEngine engine(0);
-	engine.show();
+    CustomWindow engine(0);
+    engine.show();
 
     return app.exec();
 }

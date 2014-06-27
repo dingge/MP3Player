@@ -4,13 +4,13 @@
 #include <QDesktopWidget>
 #include <QAudioDecoder>
 
-
 CustomWindow::CustomWindow(QWidget * parent):
     QWidget (parent),
     m_PlayList(this),
     m_MusicPlayer(this),
     m_TabWindow(0),
-    m_SizeGrip(this)
+    m_SizeGrip(this),
+    m_AudioPlayer(this)
 {  
     connect(this, SIGNAL(windowTitleChanged()), &m_TitleBar, SLOT(updateWindowTitle()));
     connect(&m_PlayList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), SLOT(updateSong(QTreeWidgetItem*)));
@@ -32,7 +32,8 @@ void CustomWindow::formatWidget()
     m_TabWindow.addTab(equalizer, "Equalizer");
     m_MainLayout.addWidget(&m_TitleBar, 0, 0, 1, 3);
     m_MainLayout.addWidget(&m_TabWindow,1,1,1,1);
-    m_MainLayout.addWidget(&m_MusicPlayer,2,0,1,3);
+    //m_MainLayout.addWidget(&m_MusicPlayer,2,0,1,3);
+    m_MainLayout.addWidget(&m_AudioPlayer,3,0,1,3);
     m_MainLayout.setRowStretch(2, 1);
 
 }
@@ -73,14 +74,14 @@ void CustomWindow::updateSong(QTreeWidgetItem* item)
 {
     QString song = item->data(0, 4).toString();
     qDebug() << song;
-    m_MusicPlayer.playFile(song);
+    //m_MusicPlayer.playFile(song);
 }
 
 void CustomWindow::updateBuffer()
 {
     QTreeWidgetItem *item = m_PlayList.selectedItems().first();
     QString song = item->data(0,4).toString();
-    m_MusicPlayer.bufferFile(song);
+    //m_MusicPlayer.bufferFile(song);
 }
 
 void CustomWindow::CenterOnScreen()
