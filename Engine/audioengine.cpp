@@ -24,6 +24,19 @@ int AudioEngine::currentState()
     return engineState;
 }
 
+int AudioEngine::patestCallback(
+    const void *inputBuffer, void *outputBuffer,
+    unsigned long framesPerBuffer,
+    const PaStreamCallbackTimeInfo* timeInfo,
+    PaStreamCallbackFlags statusFlags,
+    void *userData )
+{
+
+    return 0;
+}
+
+
+
 void AudioEngine::initDecoder(QString filename)
 {
 
@@ -40,7 +53,6 @@ void AudioEngine::initDecoder(QString filename)
     mpg123_volume_change(mh, 0);
     initOutput(channels, encoding, rate);
 }
-
 
 void AudioEngine::initOutput(int channels, int encoding, long rate)
 {
